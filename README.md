@@ -8,19 +8,29 @@ An automated Banking Management System backend database architecture designed us
 
 ```mermaid
 erDiagram
-    BANKING_DML ||--o{ BANKING_TX_DML : "has transactions"
+    Customers ||--o{ Accounts : "opens"
+    Accounts ||--o{ Transactions : "has"
     
-    BANKING_DML {
-        number account_no PK
-        string customer_name
-        string account_type
-        number balance
+    Customers {
+        number customer_id PK
+        string first_name
+        string last_name
+        string phone UNIQUE
+        string email UNIQUE
     }
     
-    BANKING_TX_DML {
+    Accounts {
+        number account_no PK
+        number customer_id FK
+        string account_type "CHECK (SAVING, CURRENT)"
+        number balance "DEFAULT 0.00"
+        string status "DEFAULT ACTIVE"
+    }
+    
+    Transactions {
         number transaction_id PK
         number account_no FK
-        string tx_type
+        string tx_type "CHECK (DEPOSIT, WITHDRAWAL, TRANSFER)"
         number amount
-        date tx_date
+        timestamp tx_date "DEFAULT CURRENT_TIMESTAMP"
     }
